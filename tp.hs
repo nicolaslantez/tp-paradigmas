@@ -59,13 +59,16 @@ tomarHierba raton hierba = hierba raton
 
 tratamiento diagnostico raton hierbas = foldl (aplicarHastaQueDeFalse diagnostico) raton (concat hierbas)
 
-aplicarHastaQueDeFalse diagnostico raton hierba  
-	| diagnostico raton = hierba raton
-	| otherwise = raton
+aplicarHastaQueDeFalse diagnostico raton hierba
+	|diagnostico raton = hierba raton
+	|otherwise = raton
 
 
 ratisalil = [hierbaZort, hierbaMala]
 pondsAntiAge = [alcachofa 10 , hierbaBuena, hierbaBuena, hierbaBuena]
 
 cantidadEnfermedades :: Raton -> Int
-cantidadEnfermedades raton = length (enfermedades raton) 
+cantidadEnfermedades raton = length (enfermedades raton)
+
+diagnosticoEnfermedad :: Raton -> String -> Bool
+diagnosticoEnfermedad raton enfermedad = elem enfermedad (enfermedades raton)
