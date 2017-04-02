@@ -1,9 +1,9 @@
 module Tp where 
 
-data Raton = CRaton {edad :: Float, peso :: Float, altura :: Float }deriving (Show,Eq)
+data Raton = CRaton {edad :: Float, peso :: Float, altura :: Float, enfermedades :: [String] }deriving (Show,Eq)
 
-mickeyMouse = CRaton 88 20 0.8
-jerry = CRaton 76 2 0.3
+mickeyMouse = CRaton 88 20 0.8 ["disneymania","hipotermia"]
+jerry = CRaton 76 2 0.3 ["tuberculosis","varicela","endemia"]
 
 
 estudioMasaCorporal :: Raton -> Float
@@ -23,18 +23,18 @@ analisisBerreta :: (Raton -> Float) -> Raton -> Bool
 analisisBerreta _ _ = False
 
 
-hierbaBuena :: Raton -> Raton
-hierbaBuena (CRaton edad peso altura) = CRaton (rejuvenecerRaton edad) peso altura
+hierbaBuena :: Hierba
+hierbaBuena (CRaton edad peso altura enfermedades) = CRaton (rejuvenecerRaton edad) peso altura enfermedades
 
 
-hierbaMala :: Raton -> Raton
-hierbaMala (CRaton edad peso altura) = CRaton (envejecerRaton edad) peso altura
+hierbaMala :: Hierba
+hierbaMala (CRaton edad peso altura enfermedades) = CRaton (envejecerRaton edad) peso altura enfermedades
 
-alcachofa :: Float -> Raton -> Raton
-alcachofa porcentaje (CRaton edad peso altura) = CRaton edad (reducirPeso porcentaje peso) altura
+alcachofa :: Float -> Hierba
+alcachofa porcentaje (CRaton edad peso altura enfermedades) = CRaton edad (reducirPeso porcentaje peso) altura enfermedades
 
-hierbaZort :: Raton -> Raton
-hierbaZort _ = CRaton 0 0 0
+hierbaZort :: Hierba
+hierbaZort (CRaton _ _ _ enfermedades) = CRaton 0 0 0 enfermedades
 
 
 rejuvenecerRaton :: Float -> Float
@@ -67,3 +67,5 @@ aplicarHastaQueDeFalse diagnostico raton hierba
 ratisalil = [hierbaZort, hierbaMala]
 pondsAntiAge = [alcachofa 10 , hierbaBuena, hierbaBuena, hierbaBuena]
 
+cantidadEnfermedades :: Raton -> Int
+cantidadEnfermedades raton = length (enfermedades raton) 
