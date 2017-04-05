@@ -5,27 +5,33 @@ data Raton = CRaton {edad :: Float, peso :: Float, altura :: Float, enfermedades
 mickeyMouse = CRaton 88 20 0.8 ["disneymania","hipotermia"]
 jerry = CRaton 76 2 0.3 ["tuberculosis","varicela","endemia"]
 
-
-estudioMasaCorporal :: Raton -> Float
+type Estudio = Raton -> Indice
+type Indice = Float
+estudioMasaCorporal :: Estudio
 estudioMasaCorporal raton = peso raton/(altura raton ^ 2)
 
-estudioAntiguedad :: Raton -> Float
-estudioAntiguedad raton = (edad raton + 5) / 85
+estudioAntiguedad :: Estudio
+estudioAntiguedad = calcularAntiguedad . edad
 
+calcularAntiguedad edad = (edad + 5) / 85
+-- calcularAntiguedad (/85) . (+5)
 
-analisisExceso :: (Raton -> Float) -> Float -> Raton -> Bool
-analisisExceso estudio valor raton = estudio raton > valor
+type Analisis = Estudio -> Diagnostico
+type Diagnostico = Raton -> Bool
 
-analisisRangoMedio :: (Raton -> Float) -> Raton -> Float -> Float -> Bool
-analisisRangoMedio estudio raton valorMinimo valorMaximo = not(estudio raton > valorMinimo && estudio raton < valorMaximo)
+deExceso :: Float -> Analisis
+deExceso valorMaximo estudio = (valorMaximo <) . estudio
 
-analisisBerreta :: (Raton -> Float) -> Raton -> Bool
-analisisBerreta _ _ = False
+deRangoMedio :: (Float, Float) -> Analisis 
+analisisDeRangoMedio rango estudio = not . (enRango rango) . estudio
 
+berreta :: Analisis
+berreta _ = const False
 
 hierbaBuena :: Hierba
 hierbaBuena (CRaton edad peso altura enfermedades) = CRaton (rejuvenecerRaton edad) peso altura enfermedades
-
+--analisisExceso :: (Raton -> Float) -> Float -> Raton -> Bool
+--analisisExceso estudio valor raton = estudio raton > valor
 
 hierbaMala :: Hierba
 hierbaMala (CRaton edad peso altura enfermedades) = CRaton (envejecerRaton edad) peso altura enfermedades
@@ -37,17 +43,22 @@ hierbaZort :: Hierba
 hierbaZort (CRaton _ _ _ enfermedades) = CRaton 0 0 0 enfermedades
 
 
-rejuvenecerRaton :: Float -> Float
-rejuvenecerRaton =(/2)
-
-envejecerRaton :: Float -> Float
-envejecerRaton = (*2)
-
-reducirPeso:: Float -> Float -> Float
-reducirPeso porcentaje peso = peso - ((porcentaje * peso)/100)
-
-
 type Hierba = Raton -> Raton 
+
+hierbaBuena raton = cambiarEdad (/2)
+
+hiberbaMala raton = cambiarEdad (*2)
+
+alcachofa :: Float -> Hierba
+alcachofa porcentaje raton = cambiarPeso (calcularPorcentaje porcentaje)
+
+cambiarEdad f raton = raton { edad = (f . getEdad) raton}
+
+cambiarPeso f raton = raton { peso = (f. getPeso) raton}
+
+hierbaZort _ = CRaton 0 0 0
+
+
 mezclarHierbas :: Hierba -> Hierba -> Hierba
 mezclarHierbas = (.)
 
