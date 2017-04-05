@@ -1,71 +1,64 @@
-module Tp where 
+module Tp where
+import Data.List
 
 data Raton = CRaton {edad :: Float, peso :: Float, altura :: Float, enfermedades :: [String] }deriving (Show,Eq)
 
 mickeyMouse = CRaton 88 20 0.8 ["disneymania","hipotermia"]
 jerry = CRaton 76 2 0.3 ["tuberculosis","varicela","endemia"]
 
-type Estudio = Raton -> Indice
-type Indice = Float
+type Estudio = Raton -> Float
+
 estudioMasaCorporal :: Estudio
 estudioMasaCorporal raton = peso raton/(altura raton ^ 2)
 
 estudioAntiguedad :: Estudio
 estudioAntiguedad = calcularAntiguedad . edad
 
-calcularAntiguedad edad = (edad + 5) / 85
--- calcularAntiguedad (/85) . (+5)
+calcularAntiguedad = (/85) . (+5)
 
-type Analisis = Estudio -> Diagnostico
+type Analisis = Estudio -> Diagnostico  
 type Diagnostico = Raton -> Bool
 
-deExceso :: Float -> Analisis
-deExceso valorMaximo estudio = (valorMaximo <) . estudio
+analisisExceso ::  Float -> Analisis
+analisisExceso valorMaximo estudio = (valorMaximo <) . estudio
 
-deRangoMedio :: (Float, Float) -> Analisis 
-analisisDeRangoMedio rango estudio = not . (enRango rango) . estudio
+analisisRangoMedio ::  (Float,Float) -> Analisis
+analisisRangoMedio rango estudio = not . (enRango rango) . estudio
 
-berreta :: Analisis
-berreta _ = const False
+analisisBerreta :: Analisis
+analisisBerreta _  = const False
 
-hierbaBuena :: Hierba
-hierbaBuena (CRaton edad peso altura enfermedades) = CRaton (rejuvenecerRaton edad) peso altura enfermedades
---analisisExceso :: (Raton -> Float) -> Float -> Raton -> Bool
---analisisExceso estudio valor raton = estudio raton > valor
-
-hierbaMala :: Hierba
-hierbaMala (CRaton edad peso altura enfermedades) = CRaton (envejecerRaton edad) peso altura enfermedades
-
-alcachofa :: Float -> Hierba
-alcachofa porcentaje (CRaton edad peso altura enfermedades) = CRaton edad (reducirPeso porcentaje peso) altura enfermedades
-
-hierbaZort :: Hierba
-hierbaZort (CRaton _ _ _ enfermedades) = CRaton 0 0 0 enfermedades
-
+enRango :: (Float,Float) -> Float -> Bool
+enRango rango estudio = estudio > fst rango && estudio < snd rango
 
 type Hierba = Raton -> Raton 
 
-hierbaBuena raton = cambiarEdad (/2)
+hierbaBuena :: Hierba
+hierbaBuena = cambiarEdad (/2)
 
-hiberbaMala raton = cambiarEdad (*2)
+hierbaMala :: Hierba
+hierbaMala = cambiarEdad (*2)
 
 alcachofa :: Float -> Hierba
-alcachofa porcentaje raton = cambiarPeso (calcularPorcentaje porcentaje)
+alcachofa  porcentaje = cambiarPeso (calcularPorcentaje porcentaje) 	 
 
-cambiarEdad f raton = raton { edad = (f . getEdad) raton}
+hierbaZort :: Hierba
+hierbaZort _ = CRaton 0 0 0 []
 
-cambiarPeso f raton = raton { peso = (f. getPeso) raton}
+cambiarEdad f raton = raton { edad = (f . edad) raton}
+cambiarPeso f raton = raton { peso = (f . peso) raton}
 
-hierbaZort _ = CRaton 0 0 0
+calcularPorcentaje:: Float -> Float -> Float
+calcularPorcentaje porcentaje peso = peso - ((porcentaje * peso)/100)
 
 
 mezclarHierbas :: Hierba -> Hierba -> Hierba
 mezclarHierbas = (.)
 
-medicamento :: Raton -> [(Raton -> Raton)] -> Raton
+medicamento :: Raton -> [Hierba] -> Raton
 medicamento raton hierbas = foldl tomarHierba raton hierbas
 
-tomarHierba :: Raton -> (Raton -> Raton) -> Raton
+tomarHierba :: Raton -> Hierba -> Raton
 tomarHierba raton hierba = hierba raton
 
 tratamiento diagnostico raton hierbas = foldl (aplicarHastaQueDeFalse diagnostico) raton (concat hierbas)
@@ -79,7 +72,10 @@ ratisalil = [hierbaZort, hierbaMala]
 pondsAntiAge = [alcachofa 10 , hierbaBuena, hierbaBuena, hierbaBuena]
 
 cantidadEnfermedades :: Raton -> Int
-cantidadEnfermedades raton = length (enfermedades raton)
+cantidadEnfermedades = length . comboEnfermedades
 
-diagnosticoEnfermedad :: Raton -> String -> Bool
-diagnosticoEnfermedad raton enfermedad = elem enfermedad (enfermedades raton)
+comboEnfermedades :: Raton -> [String]
+comboEnfermedades raton = enfermedades raton
+
+diagnosticoEnfermedad :: String -> Raton -> Bool
+diagnosticoEnfermedad enfermedad = (elem enfermedad) . comboEnfermedades
