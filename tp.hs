@@ -74,8 +74,38 @@ pondsAntiAge = [alcachofa 10 , hierbaBuena, hierbaBuena, hierbaBuena]
 cantidadEnfermedades :: Raton -> Int
 cantidadEnfermedades = length . comboEnfermedades
 
+-- nombre choto , mejor listaDeEnfermedades?
 comboEnfermedades :: Raton -> [String]
 comboEnfermedades raton = enfermedades raton
 
-diagnosticoEnfermedad :: String -> Raton -> Bool
+diagnosticoEnfermedad :: String -> Diagnostico
 diagnosticoEnfermedad enfermedad = (elem enfermedad) . comboEnfermedades
+
+crearPinky :: Float -> Float -> Float -> Raton
+crearPinky edad peso altura = CRaton edad peso altura []
+
+hierbaVerde :: String -> Raton -> Raton
+
+
+
+["sarasa","peces","papasa"]
+palabraBuscada = "asa"
+
+
+funcionX listaDePalabras palabraBuscada =  map (funcion palabraBuscada) (listaDePalabras)
+
+
+-- 	"asa"  		"sarasa"
+funcion  palabraBuscada palabra = hayQueEliminarPalabra palabraBuscada (tails palabra)
+-- ["sarasa","arasa","rasa","asa","sa","a",""]
+
+
+
+----funcioncita :: Raton -> String -> Raton
+----funcioncita raton palabra = raton { enfermedades = ((eliminarPalabra palabra) . comboEnfermedades) raton}
+
+--eliminarPalabra palabra [] = []
+--eliminarPalabra palabra (x:xs)
+--		| x == palabra = eliminarPalabra palabra xs
+--		| otherwise = x: eliminarPalabra palabra xs
+hayQueEliminarPalabra palabra lista = elem palabra lista 
