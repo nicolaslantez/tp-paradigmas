@@ -72,40 +72,29 @@ ratisalil = [hierbaZort, hierbaMala]
 pondsAntiAge = [alcachofa 10 , hierbaBuena, hierbaBuena, hierbaBuena]
 
 cantidadEnfermedades :: Raton -> Int
-cantidadEnfermedades = length . comboEnfermedades
+cantidadEnfermedades = length . listaEnfermedades
 
--- nombre choto , mejor listaDeEnfermedades?
-comboEnfermedades :: Raton -> [String]
-comboEnfermedades raton = enfermedades raton
+listaEnfermedades :: Raton -> [String]
+listaEnfermedades raton = enfermedades raton
 
 diagnosticoEnfermedad :: String -> Diagnostico
-diagnosticoEnfermedad enfermedad = (elem enfermedad) . comboEnfermedades
+diagnosticoEnfermedad enfermedad = (elem enfermedad) . listaEnfermedades
 
 crearPinky :: Float -> Float -> Float -> Raton
 crearPinky edad peso altura = CRaton edad peso altura []
 
-hierbaVerde :: String -> Raton -> Raton
+pdpCilina :: Raton -> Raton
+pdpCilina = flip medicamento hierbasVerdes
 
+hierbasVerdes = map hierbaVerde enfermedadesInfecciosas
 
+enfermedadesInfecciosas = ["sis", "itis", "emia", "cocos"]
 
-["sarasa","peces","papasa"]
-palabraBuscada = "asa"
+hierbaVerde :: String -> Hierba
+hierbaVerde palabra = cambiarEnfermedades (eliminarEnfermedades palabra)
 
+cambiarEnfermedades efecto raton = raton { enfermedades = (efecto.enfermedades) raton }
 
-funcionX listaDePalabras palabraBuscada =  map (funcion palabraBuscada) (listaDePalabras)
+eliminarEnfermedades palabra enfermedades = filter (not.enfermedadTerminaCon palabra) enfermedades 
 
-
--- 	"asa"  		"sarasa"
-funcion  palabraBuscada palabra = hayQueEliminarPalabra palabraBuscada (tails palabra)
--- ["sarasa","arasa","rasa","asa","sa","a",""]
-
-
-
-----funcioncita :: Raton -> String -> Raton
-----funcioncita raton palabra = raton { enfermedades = ((eliminarPalabra palabra) . comboEnfermedades) raton}
-
---eliminarPalabra palabra [] = []
---eliminarPalabra palabra (x:xs)
---		| x == palabra = eliminarPalabra palabra xs
---		| otherwise = x: eliminarPalabra palabra xs
-hayQueEliminarPalabra palabra lista = elem palabra lista 
+enfermedadTerminaCon palabra enfermedad = elem palabra (tails enfermedad)
