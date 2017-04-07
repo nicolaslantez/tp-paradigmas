@@ -98,3 +98,8 @@ cambiarEnfermedades efecto raton = raton { enfermedades = (efecto.enfermedades) 
 eliminarEnfermedades palabra enfermedades = filter (not.enfermedadTerminaCon palabra) enfermedades 
 
 enfermedadTerminaCon palabra enfermedad = elem palabra (tails enfermedad)
+
+--data Colonia = CColonia {ratones :: [Raton]} deriving (Show,Eq)
+promedioEstudio estudio colonia = promedio (map estudio colonia)
+
+promedio xs = realToFrac (sum xs) / genericLength xs
