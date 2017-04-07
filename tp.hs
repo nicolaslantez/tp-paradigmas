@@ -5,7 +5,6 @@ data Raton = CRaton {edad :: Float, peso :: Float, altura :: Float, enfermedades
 
 mickeyMouse = CRaton 88 20 0.8 ["disneymania","hipotermia"]
 jerry = CRaton 76 2 0.3 ["tuberculosis","varicela","endemia"]
-hola = CRaton 76 2 0.3 ["tuberculosis","endemia"]
 
 type Estudio = Raton -> Float
 
@@ -120,13 +119,12 @@ aplicarEstudioEnPeligro diagnostico estudio raton
 	| diagnostico raton = estudio raton
 	| otherwise = 0
 
-enfermedadesPeligrosas colonia = foldl intersecta [] colonia
---funcion colonia = map (`elem` (listaEnfermedadesColonia colonia) (listaEnfermedadesColonia colonia))
---listaEnfermedadesColonia colonia = concat(map listaEnfermedades colonia) 
+enfermedadesPeligrosas :: Colonia -> [String]
+enfermedadesPeligrosas colonia = nub (filter (condicion colonia) (listaEnfermedadesColonia colonia))
 
-intersecta :: [String] -> Raton -> [String]
-intersecta [] raton = enfermedades raton
-intersecta listaIntersectada raton = intersect listaIntersectada (enfermedades raton)
+listaEnfermedadesColonia colonia = concat (map listaEnfermedades colonia)
+
+condicion colonia enfermedad = all (diagnosticoEnfermedad enfermedad) colonia
 
 funcionaMedicina :: Diagnostico -> Medicamento -> Colonia -> Bool
 funcionaMedicina diagnóstico medicamento = any (==False) . diagnósticoRatonesEnPeligro diagnóstico medicamento
