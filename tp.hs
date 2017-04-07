@@ -5,6 +5,7 @@ data Raton = CRaton {edad :: Float, peso :: Float, altura :: Float, enfermedades
 
 mickeyMouse = CRaton 88 20 0.8 ["disneymania","hipotermia"]
 jerry = CRaton 76 2 0.3 ["tuberculosis","varicela","endemia"]
+hola = CRaton 76 2 0.3 ["tuberculosis","endemia"]
 
 type Estudio = Raton -> Float
 
@@ -40,7 +41,7 @@ hierbaMala :: Hierba
 hierbaMala = cambiarEdad (*2)
 
 alcachofa :: Float -> Hierba
-alcachofa  porcentaje = cambiarPeso (calcularPorcentaje porcentaje) 	 
+alcachofa  porcentaje = cambiarPeso (calcularPorcentaje porcentaje)
 
 hierbaZort :: Hierba
 hierbaZort _ = CRaton 0 0 0 []
@@ -55,8 +56,10 @@ calcularPorcentaje porcentaje peso = peso - ((porcentaje * peso)/100)
 mezclarHierbas :: Hierba -> Hierba -> Hierba
 mezclarHierbas = (.)
 
-medicamento :: Raton -> [Hierba] -> Raton
-medicamento raton hierbas = foldl tomarHierba raton hierbas
+type Medicamento = Raton -> Raton
+
+medicamento :: [Hierba] -> Medicamento
+medicamento hierbas raton = foldl tomarHierba raton hierbas
 
 tomarHierba :: Raton -> Hierba -> Raton
 tomarHierba raton hierba = hierba raton
@@ -71,8 +74,8 @@ aplicarHastaQueDeFalse diagnostico raton hierba
 ratisalil = [hierbaZort, hierbaMala]
 pondsAntiAge = [alcachofa 10 , hierbaBuena, hierbaBuena, hierbaBuena]
 
-cantidadEnfermedades :: Raton -> Int
-cantidadEnfermedades = length . listaEnfermedades
+estudioCantidadEnfermedades :: Estudio
+estudioCantidadEnfermedades = genericLength . listaEnfermedades
 
 listaEnfermedades :: Raton -> [String]
 listaEnfermedades raton = enfermedades raton
@@ -84,7 +87,7 @@ crearPinky :: Float -> Float -> Float -> Raton
 crearPinky edad peso altura = CRaton edad peso altura []
 
 pdpCilina :: Raton -> Raton
-pdpCilina = flip medicamento hierbasVerdes
+pdpCilina = medicamento hierbasVerdes
 
 hierbasVerdes = map hierbaVerde enfermedadesInfecciosas
 
@@ -99,15 +102,39 @@ eliminarEnfermedades palabra enfermedades = filter (not.enfermedadTerminaCon pal
 
 enfermedadTerminaCon palabra enfermedad = elem palabra (tails enfermedad)
 
---data Colonia = CColonia {ratones :: [Raton]} deriving (Show,Eq)
+
+type Colonia = [Raton]
+
+promedioEstudio :: Estudio -> Colonia -> Float
 promedioEstudio estudio colonia = promedio (map estudio colonia)
 
 promedio xs = realToFrac (sum xs) / genericLength xs
 
+cantidadEnfermos :: Colonia -> Diagnostico -> Int
 cantidadEnfermos colonia diagnostico = genericLength (filter (==True) (map diagnostico colonia))
 
-deLimite diagnostico colonia estudio = maximum (map (enPeligro diagnostico estudio) colonia)
+deLimite :: Diagnostico -> Colonia -> Estudio -> Float
+deLimite diagnostico colonia estudio = maximum (map (aplicarEstudioEnPeligro diagnostico estudio) colonia)
 
-enPeligro diagnostico estudio raton
+aplicarEstudioEnPeligro diagnostico estudio raton
 	| diagnostico raton = estudio raton
 	| otherwise = 0
+
+enfermedadesPeligrosas colonia = foldl intersecta [] colonia
+--funcion colonia = map (`elem` (listaEnfermedadesColonia colonia) (listaEnfermedadesColonia colonia))
+--listaEnfermedadesColonia colonia = concat(map listaEnfermedades colonia) 
+
+intersecta :: [String] -> Raton -> [String]
+intersecta [] raton = enfermedades raton
+intersecta listaIntersectada raton = intersect listaIntersectada (enfermedades raton)
+
+funcionaMedicina :: Diagnostico -> Medicamento -> Colonia -> Bool
+funcionaMedicina diagnóstico medicamento = any (==False) . diagnósticoRatonesEnPeligro diagnóstico medicamento
+
+diagnósticoRatonesEnPeligro diagnóstico medicamento = map diagnóstico . ratonesEnPeligroConMedicamento diagnóstico medicamento 
+
+ratonesEnPeligroConMedicamento diagnóstico medicamento = map (enPeligro diagnóstico medicamento)
+
+enPeligro diagnóstico medicamento raton
+	|diagnóstico raton = medicamento raton
+	|otherwise = CRaton 1000 1000 1000 []
