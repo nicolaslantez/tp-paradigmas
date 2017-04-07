@@ -103,3 +103,11 @@ enfermedadTerminaCon palabra enfermedad = elem palabra (tails enfermedad)
 promedioEstudio estudio colonia = promedio (map estudio colonia)
 
 promedio xs = realToFrac (sum xs) / genericLength xs
+
+cantidadEnfermos colonia diagnostico = genericLength (filter (==True) (map diagnostico colonia))
+
+deLimite diagnostico colonia estudio = maximum (map (enPeligro diagnostico estudio) colonia)
+
+enPeligro diagnostico estudio raton
+	| diagnostico raton = estudio raton
+	| otherwise = 0
