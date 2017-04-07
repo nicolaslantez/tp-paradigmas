@@ -109,7 +109,7 @@ promedioEstudio estudio colonia = promedio (map estudio colonia)
 
 promedio xs = realToFrac (sum xs) / genericLength xs
 
-cantidadEnfermos :: Colonia -> Diagnostico -> Int
+cantidadEnfermos :: Colonia -> Diagnostico -> Float
 cantidadEnfermos colonia diagnostico = genericLength (filter (==True) (map diagnostico colonia))
 
 deLimite :: Diagnostico -> Colonia -> Estudio -> Float
@@ -136,3 +136,8 @@ ratonesEnPeligroConMedicamento diagnóstico medicamento = map (enPeligro diagnó
 enPeligro diagnóstico medicamento raton
 	|diagnóstico raton = medicamento raton
 	|otherwise = CRaton 1000 1000 1000 []
+
+
+--Modelado para tests
+diagnosticoEnfermedadDisneymania raton = diagnosticoEnfermedad "disneymania" raton
+coloniaPDP = [jerry,mickeyMouse]
