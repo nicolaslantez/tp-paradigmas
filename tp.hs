@@ -150,7 +150,11 @@ medicamentoParaRatonesEnPeligro medicamento diagnostico = map medicamento . filt
 
 --6
 --mejorMedicina :: ALGO -> [Medicamento] -> Colonia -> Medicamento
---mejorMedicina estudioPunto3 listaDeMedicamentos colonia = map estudioPunto3ConSusParametros colonia [medicamento] (esto rompe porque en el otro lo ultimo q recibe no es la lista de medicamentos 
+-- esto devuelve una lista de floats ( es decir, una lista de los valores despues de aplicar el medicamento a cada raton) ahora debería sacar el promedio y dsp compararlo contra las otras medicinas
+-- ejemplo [[1,2,3],[3,2,1],[1,1,1]]
+-- aca tengo q calcular el promedio que seria 2,2,1 por ende me quedo con el 1 y devuelvo esa hierba!!! POLE HELP HERE! :D
+mejorMedicina estudioPunto3 listaDeMedicamentos = map (diagnosticoMedicamentoAplicado estudioPunto3) listaMedicamento  
+
 
 --Modelado para tests
 diagnosticoEnfermedadDisneymania raton = diagnosticoEnfermedad "disneymania" raton
