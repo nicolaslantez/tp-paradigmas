@@ -108,8 +108,8 @@ enfermedadesInfecciosas = ["sis", "itis", "emia", "cocos"]
 
 type Colonia = [Raton]
 --3)a)
-promedioEstudio :: Estudio -> Colonia -> Float
-promedioEstudio estudio colonia = promedio (map estudio colonia)
+promedioEstudio :: Colonia -> Estudio -> Float
+promedioEstudio colonia estudio = promedio (map estudio colonia)
 
 promedio xs = realToFrac (sum xs) / genericLength xs
 
@@ -118,8 +118,8 @@ cantidadEnfermos :: Colonia -> Diagnostico -> Float
 cantidadEnfermos colonia diagnostico = genericLength (filter (==True) (map diagnostico colonia))
 
 --3)c)
-deLimite :: Diagnostico -> Colonia -> Estudio -> Float
-deLimite diagnostico colonia estudio = maximum (map (aplicarEstudioEnPeligro diagnostico estudio) colonia)
+deLimite :: Colonia -> Diagnostico -> Estudio -> Float
+deLimite  colonia diagnostico estudio = maximum (map (aplicarEstudioEnPeligro diagnostico estudio) colonia)
 
 aplicarEstudioEnPeligro diagnostico estudio raton
 	| diagnostico raton = estudio raton
