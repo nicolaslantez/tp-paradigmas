@@ -73,6 +73,7 @@ aplicarHastaQueDeFalse diagnostico raton hierba
 ratisalil = [hierbaZort, hierbaMala]
 pondsAntiAge = [alcachofa 10 , hierbaBuena, hierbaBuena, hierbaBuena]
 
+-- PUNTO 2 --
 --1)a)
 estudioCantidadEnfermedades :: Estudio
 estudioCantidadEnfermedades = genericLength . listaEnfermedades
@@ -99,7 +100,10 @@ eliminarEnfermedades palabra enfermedades = filter (not.enfermedadTerminaCon pal
 enfermedadTerminaCon palabra enfermedad = elem palabra (tails enfermedad)
 
 --2)b)
+-- :: Hierba?
 pdpCilina :: Raton -> Raton
+-- para mi medicamento esta demás porque hierbaVerde ya te devuelve un raton curado. o no?
+-- hierbasVerdes devuelve una lista de ratones. o no?
 pdpCilina = medicamento hierbasVerdes
 
 hierbasVerdes = map hierbaVerde enfermedadesInfecciosas
@@ -107,6 +111,7 @@ hierbasVerdes = map hierbaVerde enfermedadesInfecciosas
 enfermedadesInfecciosas = ["sis", "itis", "emia", "cocos"]
 
 type Colonia = [Raton]
+-- yo haria un type Indice = Float
 --3)a)
 promedioEstudio :: Colonia -> Estudio -> Float
 promedioEstudio colonia estudio = promedio (map estudio colonia)
@@ -118,6 +123,7 @@ cantidadEnfermos :: Colonia -> Diagnostico -> Float
 cantidadEnfermos colonia diagnostico = genericLength (filter (==True) (map diagnostico colonia))
 
 --3)c)
+--esto esta bien y teoricamente funciona pero en lugar de hacerlo con guardas por que no usar la funcion del punto 3)b)?
 deLimite :: Colonia -> Diagnostico -> Estudio -> Float
 deLimite  colonia diagnostico estudio = maximum (map (aplicarEstudioEnPeligro diagnostico estudio) colonia)
 
@@ -129,6 +135,7 @@ aplicarEstudioEnPeligro diagnostico estudio raton
 enfermedadesPeligrosas :: Colonia -> [String]
 enfermedadesPeligrosas colonia = nub (filter (condicion colonia) (listaEnfermedadesColonia colonia))
 
+-- el nub podría estar acá nub (concat .....) asi no filtras directamente elementos duplicados y dsp los sacas ( ponele que por performance..)
 listaEnfermedadesColonia colonia = concat (map listaEnfermedades colonia)
 
 condicion colonia enfermedad = all (diagnosticoEnfermedad enfermedad) colonia
@@ -141,6 +148,9 @@ diagnosticoConMedicamentoAplicado diagnostico medicamento = map diagnostico . me
 
 medicamentoParaRatonesEnPeligro medicamento diagnostico = map medicamento . filter diagnostico
 
+--6
+mejorMedicina :: Estudio -> [Medicamento] -> Colonia -> Medicamento
+--mejorMedicina diagnostico listaDeMedicamentos colonia = map  
 
 --Modelado para tests
 diagnosticoEnfermedadDisneymania raton = diagnosticoEnfermedad "disneymania" raton
