@@ -32,5 +32,29 @@ main = hspec $do
                         tratamiento (analisisExceso 1 estudioAntiguedad) mickeyMouse [[hierbaBuena],pondsAntiAge] `shouldBe` hierbaBuena mickeyMouse
                 it "aplicarle un tratamiento contra la antiguedad a jerry con una hierbaBuena y una pondsAntiAge debe producir los mismos resultados que aplicarle una hierbaBuena" $do
                         tratamiento (analisisExceso 1 estudioAntiguedad) jerry [[hierbaBuena],pondsAntiAge] `shouldBe` alcachofa 0 jerry
-                it "le aplico pdpCilina a jerry y solo le queda varicela como enfermedad" $do
+               -- PUNTO 8 -- 
+        describe "Tests de diagnosticos/observaciones :" $do
+                it "mickeyMouse tiene disneymania" $do
+                        diagnosticoEnfermedad "disneymania" mickeyMouse `shouldBe` True
+                
+                it "jerry no tiene disneymania" $do
+                        diagnosticoEnfermedad "disneymania" jerry `shouldBe` False
+
+                it "al darle pdpCilina a jerry solo le queda varicela como enfermedad" $do
                         pdpCilina jerry `shouldBe` CRaton 76 2 0.3 ["varicela"]
+                
+                -- PUNTO 9 --
+        describe "Tests de colonias :" $do
+                it "" $do
+                        promedioEstudio coloniaPDP estudioCantidadEnfermedades `shouldBe` 2.5 
+
+                it "la cantidad de enfermos que poseen la enfermedad disneymania en la coloniaPDP es de 1" $do
+                        cantidadEnfermos coloniaPDP (diagnosticoEnfermedad "disneymania") `shouldBe` 1
+
+                -- PUNTO 10 --
+        describe "Tests de funcionamiento de medicinas :" $do
+                it "la pdpCilina no funciona para tratar la enfermedad disneyMania" $do
+                        funcionaMedicina (diagnosticoEnfermedad "disneymania") pdpCilina coloniaPDP `shouldBe` False
+                
+                it "una hierba verde de 'ania' funciona para tratar la enfermedad disneymania" $do
+                        funcionaMedicina (diagnosticoEnfermedad "disneymania") (hierbaVerde "ania") coloniaPDP `shouldBe` True

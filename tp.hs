@@ -149,8 +149,8 @@ diagnosticoConMedicamentoAplicado diagnostico medicamento = map diagnostico . me
 medicamentoParaRatonesEnPeligro medicamento diagnostico = map medicamento . filter diagnostico
 
 --6
-mejorMedicina :: Estudio -> [Medicamento] -> Colonia -> Medicamento
---mejorMedicina diagnostico listaDeMedicamentos colonia = map  
+--mejorMedicina :: ALGO -> [Medicamento] -> Colonia -> Medicamento
+--mejorMedicina estudioPunto3 listaDeMedicamentos colonia = map estudioPunto3ConSusParametros colonia [medicamento] (esto rompe porque en el otro lo ultimo q recibe no es la lista de medicamentos 
 
 --Modelado para tests
 diagnosticoEnfermedadDisneymania raton = diagnosticoEnfermedad "disneymania" raton
