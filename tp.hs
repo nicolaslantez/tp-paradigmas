@@ -127,15 +127,11 @@ listaEnfermedadesColonia colonia = concat (map listaEnfermedades colonia)
 condicion colonia enfermedad = all (diagnosticoEnfermedad enfermedad) colonia
 
 funcionaMedicina :: Diagnostico -> Medicamento -> Colonia -> Bool
-funcionaMedicina diagnóstico medicamento = any (==False) . diagnósticoRatonesEnPeligro diagnóstico medicamento
+funcionaMedicina diagnostico medicamento = any (==False) . diagnosticoConMedicamentoAplicado diagnostico medicamento
 
-diagnósticoRatonesEnPeligro diagnóstico medicamento = map diagnóstico . ratonesEnPeligroConMedicamento diagnóstico medicamento 
+diagnosticoConMedicamentoAplicado diagnostico medicamento = map diagnostico . medicamentoParaRatonesEnPeligro medicamento diagnostico
 
-ratonesEnPeligroConMedicamento diagnóstico medicamento = map (enPeligro diagnóstico medicamento)
-
-enPeligro diagnóstico medicamento raton
-	|diagnóstico raton = medicamento raton
-	|otherwise = CRaton 1000 1000 1000 []
+medicamentoParaRatonesEnPeligro medicamento diagnostico = map medicamento . filter diagnostico
 
 
 --Modelado para tests
