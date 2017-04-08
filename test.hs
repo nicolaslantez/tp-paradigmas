@@ -13,10 +13,7 @@ main = hspec $do
                 it "el analisis de rango medio para el estudio de masa coporal con indices entre 18.5 y 25 de Micky Mouse deberia dar positivo" $do
                         analisisRangoMedio (18.5,25) estudioMasaCorporal mickeyMouse `shouldBe` True
                 it "el analisis de rango medio para el estudio de masa coporal con indices entre 18.5 y 25 de Jerry deberia dar negativo" $do
-                        analisisRangoMedio (18.5,25) estudioMasaCorporal jerry `shouldBe` False
-                it "realiza el diagnostico para la enfermedad Disneymania" $do
-                        diagnosticoEnfermedadDisneymania jerry `shouldBe` False
-                        diagnosticoEnfermedadDisneymania mickeyMouse `shouldBe` True
+                        analisisRangoMedio (18.5,25) estudioMasaCorporal jerry `shouldBe` False                        
         describe "Tests medicinas y operaciones:" $do
                 it "mezclar una Hierba buena con una Hierba mala crea una hierba que no produce efecto" $do
                         mezclarHierbas hierbaBuena hierbaMala jerry `shouldBe` jerry
@@ -35,10 +32,10 @@ main = hspec $do
                -- PUNTO 8 -- 
         describe "Tests de diagnosticos/observaciones :" $do
                 it "mickeyMouse tiene disneymania" $do
-                        diagnosticoEnfermedad "disneymania" mickeyMouse `shouldBe` True
+                        diagnosticoEnfermedadDisneymania mickeyMouse `shouldBe` True
                 
                 it "jerry no tiene disneymania" $do
-                        diagnosticoEnfermedad "disneymania" jerry `shouldBe` False
+                        diagnosticoEnfermedadDisneymania jerry `shouldBe` False
 
                 it "al darle pdpCilina a jerry solo le queda varicela como enfermedad" $do
                         pdpCilina jerry `shouldBe` CRaton 76 2 0.3 ["varicela"]
