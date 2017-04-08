@@ -73,25 +73,22 @@ aplicarHastaQueDeFalse diagnostico raton hierba
 ratisalil = [hierbaZort, hierbaMala]
 pondsAntiAge = [alcachofa 10 , hierbaBuena, hierbaBuena, hierbaBuena]
 
+--1)a)
 estudioCantidadEnfermedades :: Estudio
 estudioCantidadEnfermedades = genericLength . listaEnfermedades
 
 listaEnfermedades :: Raton -> [String]
 listaEnfermedades raton = enfermedades raton
 
+--1)b)
 diagnosticoEnfermedad :: String -> Diagnostico
 diagnosticoEnfermedad enfermedad = (elem enfermedad) . listaEnfermedades
 
+--1)c)
 crearPinky :: Float -> Float -> Float -> Raton
 crearPinky edad peso altura = CRaton edad peso altura []
 
-pdpCilina :: Raton -> Raton
-pdpCilina = medicamento hierbasVerdes
-
-hierbasVerdes = map hierbaVerde enfermedadesInfecciosas
-
-enfermedadesInfecciosas = ["sis", "itis", "emia", "cocos"]
-
+--2)a)
 hierbaVerde :: String -> Hierba
 hierbaVerde palabra = cambiarEnfermedades (eliminarEnfermedades palabra)
 
@@ -101,17 +98,26 @@ eliminarEnfermedades palabra enfermedades = filter (not.enfermedadTerminaCon pal
 
 enfermedadTerminaCon palabra enfermedad = elem palabra (tails enfermedad)
 
+--2)b)
+pdpCilina :: Raton -> Raton
+pdpCilina = medicamento hierbasVerdes
+
+hierbasVerdes = map hierbaVerde enfermedadesInfecciosas
+
+enfermedadesInfecciosas = ["sis", "itis", "emia", "cocos"]
 
 type Colonia = [Raton]
-
+--3)a)
 promedioEstudio :: Estudio -> Colonia -> Float
 promedioEstudio estudio colonia = promedio (map estudio colonia)
 
 promedio xs = realToFrac (sum xs) / genericLength xs
 
+--3)b)
 cantidadEnfermos :: Colonia -> Diagnostico -> Float
 cantidadEnfermos colonia diagnostico = genericLength (filter (==True) (map diagnostico colonia))
 
+--3)c)
 deLimite :: Diagnostico -> Colonia -> Estudio -> Float
 deLimite diagnostico colonia estudio = maximum (map (aplicarEstudioEnPeligro diagnostico estudio) colonia)
 
@@ -119,6 +125,7 @@ aplicarEstudioEnPeligro diagnostico estudio raton
 	| diagnostico raton = estudio raton
 	| otherwise = 0
 
+--4
 enfermedadesPeligrosas :: Colonia -> [String]
 enfermedadesPeligrosas colonia = nub (filter (condicion colonia) (listaEnfermedadesColonia colonia))
 
@@ -126,6 +133,7 @@ listaEnfermedadesColonia colonia = concat (map listaEnfermedades colonia)
 
 condicion colonia enfermedad = all (diagnosticoEnfermedad enfermedad) colonia
 
+--5
 funcionaMedicina :: Diagnostico -> Medicamento -> Colonia -> Bool
 funcionaMedicina diagnostico medicamento = any (==False) . diagnosticoConMedicamentoAplicado diagnostico medicamento
 
