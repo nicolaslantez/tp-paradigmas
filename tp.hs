@@ -100,10 +100,7 @@ eliminarEnfermedades palabra enfermedades = filter (not.enfermedadTerminaCon pal
 enfermedadTerminaCon palabra enfermedad = elem palabra (tails enfermedad)
 
 --2)b)
--- :: Hierba?
-pdpCilina :: Raton -> Raton
--- para mi medicamento esta demás porque hierbaVerde ya te devuelve un raton curado. o no? --La consigna te dice que es un medicamento
--- hierbasVerdes devuelve una lista de ratones. o no? --no, devuelve una lista de hierbas verdes que el medicamento las va aplicando al raton
+pdpCilina :: Medicamento
 pdpCilina = medicamento hierbasVerdes
 
 hierbasVerdes = map hierbaVerde enfermedadesInfecciosas
@@ -111,34 +108,30 @@ hierbasVerdes = map hierbaVerde enfermedadesInfecciosas
 enfermedadesInfecciosas = ["sis", "itis", "emia", "cocos"]
 
 type Colonia = [Raton]
-type Indice = Float
+type Observacion = Float
 --3)a)
-promedioEstudio :: Colonia -> Estudio -> Indice
-promedioEstudio colonia estudio = promedio (map estudio colonia)
+promedioEstudio :: Estudio -> Colonia -> Observacion
+promedioEstudio estudio colonia = promedio (map estudio colonia)
 
 promedio xs = realToFrac (sum xs) / genericLength xs
 
 --3)b)
-cantidadEnfermos :: Colonia -> Diagnostico -> Indice
-cantidadEnfermos colonia diagnostico = genericLength (filter (==True) (map diagnostico colonia))
+cantidadEnfermos :: Diagnostico -> Colonia -> Observacion
+cantidadEnfermos diagnostico colonia = genericLength (filter (==True) (map diagnostico colonia))
 
 --3)c)
-deLimite :: Colonia -> Diagnostico -> Estudio -> Indice
-deLimite  colonia diagnostico = maximum . aplicarEstudioEnPeligro diagnostico colonia   
+deLimite :: Diagnostico -> Estudio -> Colonia -> Observacion
+deLimite  diagnostico estudio = maximum . aplicarEstudioEnPeligro diagnostico estudio 
 
-aplicarEstudioEnPeligro diagnostico colonia estudio  = map estudio (ratonesEnPeligro diagnostico colonia)
+aplicarEstudioEnPeligro diagnostico estudio colonia  = map estudio (ratonesEnPeligro diagnostico colonia)
 
 ratonesEnPeligro diagnostico = filter diagnostico
 
 --4
 enfermedadesPeligrosas :: Colonia -> [String]
-enfermedadesPeligrosas colonia = nub (filter (condicion colonia) (listaEnfermedadesColonia colonia))
+enfermedadesPeligrosas colonia = filter (condicion colonia) (listaEnfermedadesColonia colonia)
 
--- el nub podría estar acá nub (concat .....) asi no filtras directamente elementos duplicados y dsp los sacas ( ponele que por performance..)
--- no, el nub te borra los elementos duplicados, aca se usa porque tiene que pasar por todos los ratones, entonces al hacer "condicion" 
--- si una enfermedad se repite te la va a poner en la lista 2 veces. por ejemplo: si "varicela" es la que aparece en todos los ratones,
---va a aparecer 2 veces en la lista final entonces se usa el "nub" para borrar el/los duplicado/s.
-listaEnfermedadesColonia colonia = concat (map listaEnfermedades colonia)
+listaEnfermedadesColonia colonia = nub (concat (map listaEnfermedades colonia))
 
 condicion colonia enfermedad = all (diagnosticoEnfermedad enfermedad) colonia
 
@@ -150,13 +143,19 @@ diagnosticoConMedicamentoAplicado diagnostico medicamento = map diagnostico . me
 
 medicamentoParaRatonesEnPeligro medicamento diagnostico = map medicamento . ratonesEnPeligro diagnostico
 
---6
---mejorMedicina :: ALGO -> [Medicamento] -> Colonia -> Medicamento
--- esto devuelve una lista de floats ( es decir, una lista de los valores despues de aplicar el medicamento a cada raton) ahora debería sacar el promedio y dsp compararlo contra las otras medicinas
--- ejemplo [[1,2,3],[3,2,1],[1,1,1]]
--- aca tengo q calcular el promedio que seria 2,2,1 por ende me quedo con el 1 y devuelvo esa hierba!!! POLE HELP HERE! :D
---mejorMedicina estudioPunto3 listaDeMedicamentos = map (diagnosticoMedicamentoAplicado estudioPunto3) listaMedicamento  
+-- 6
+-- [[hierbaBuena,(alcachofa 10)], [hierbaMala]]
+--mejorMedicina observacion listaMedicamentos colonia = minimum (estudioEnColonias observacion listaMedicamentos colonia)
 
+mejorMedicina observacion listaMedicamentos colonia = map (listaMedicamentos !!) (elemIndices (minimum (estudioEnColonias observacion listaMedicamentos colonia)) (estudioEnColonias observacion listaMedicamentos colonia))
+
+estudioEnColonias observacion listaDeMedicamentos colonia = map observacion (aplicarListaDeMedicamentosAColonia listaDeMedicamentos colonia)
+
+
+aplicarListaDeMedicamentosAColonia listaDeMedicamentos colonia = map  (aplicarMedicamentoAColonia colonia) listaDeMedicamentos  
+
+
+aplicarMedicamentoAColonia colonia medicina = map (medicamento medicina) colonia 
 
 --Modelado para tests
 diagnosticoEnfermedadDisneymania raton = diagnosticoEnfermedad "disneymania" raton
