@@ -158,5 +158,8 @@ aplicarListaDeMedicamentosAColonia listaDeMedicamentos colonia = map  (aplicarMe
 aplicarMedicamentoAColonia colonia medicina = map (medicamento medicina) colonia 
 
 --Modelado para tests
-diagnosticoEnfermedadDisneymania raton = diagnosticoEnfermedad "disneymania" raton
+diagnosticoAntiguedad = analisisExceso 1 estudioAntiguedad
+diagnosticoMasaCorporal = analisisRangoMedio (18.5,25) estudioMasaCorporal
+tratamientoContraAntiguedad raton = tratamiento (analisisExceso 1 estudioAntiguedad) raton [[hierbaBuena],pondsAntiAge]
+diagnosticoEnfermedadDisneymania = diagnosticoEnfermedad "disneymania"
 coloniaPDP = [jerry,mickeyMouse]
