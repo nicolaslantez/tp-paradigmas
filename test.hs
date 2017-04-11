@@ -55,3 +55,5 @@ main = hspec $do
                 
                 it "una hierba verde de 'ania' funciona para tratar la enfermedad disneymania" $do
                         funcionaMedicina (diagnosticoEnfermedad "disneymania") (hierbaVerde "ania") coloniaPDP `shouldBe` True
+                it "es mejorMedicina una basada en hierbaBuena y alcachofa 100 que una basada en hierbaMala." $do
+                        medicamento ((mejorMedicina ((deLimite (diagnosticoEnfermedad "disneymania")) estudioMasaCorporal) [[hierbaBuena,(alcachofa 100)], [hierbaMala]] coloniaPDP) !! 0) mickeyMouse `shouldBe` medicamento [hierbaBuena,(alcachofa 100)] mickeyMouse
